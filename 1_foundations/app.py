@@ -20,13 +20,29 @@ def push(text):
     )
 
 
+# def record_user_details(email, name="Name not provided", notes="not provided"):
+#     push(f"Recording {name} with email {email} and notes {notes}")
+#     return {"recorded": "ok"}
+
+_last_recorded = {"question": None, "email": None}
+
 def record_user_details(email, name="Name not provided", notes="not provided"):
-    push(f"Recording {name} with email {email} and notes {notes}")
+    global _last_recorded
+    if email != _last_recorded.get("email"):
+        push(f"Recording {name} with email {email} and notes {notes}")
+        _last_recorded["email"] = email
     return {"recorded": "ok"}
 
 def record_unknown_question(question):
-    push(f"Recording {question}")
+    global _last_recorded
+    if question != _last_recorded.get("question"):
+        push(f"Recording {question}")
+        _last_recorded["question"] = question
     return {"recorded": "ok"}
+
+# def record_unknown_question(question):
+#     push(f"Recording {question}")
+#     return {"recorded": "ok"}
 
 record_user_details_json = {
     "name": "record_user_details",
@@ -76,9 +92,11 @@ tools = [{"type": "function", "function": record_user_details_json},
 class Me:
 
     def __init__(self):
-        self.openai = OpenAI()
-        self.name = "Ed Donner"
-        reader = PdfReader("me/linkedin.pdf")
+        # self.openai = OpenAI()
+        self.openai = OpenAI(api_key=os.getenv("GEMINI_API_KEY"), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+
+        self.name = "Priya"
+        reader = PdfReader("me/Profile.pdf")
         self.linkedin = ""
         for page in reader.pages:
             text = page.extract_text()
@@ -115,8 +133,10 @@ If the user is engaging in discussion, try to steer them towards getting in touc
     def chat(self, message, history):
         messages = [{"role": "system", "content": self.system_prompt()}] + history + [{"role": "user", "content": message}]
         done = False
+        
         while not done:
-            response = self.openai.chat.completions.create(model="gpt-4o-mini", messages=messages, tools=tools)
+            response = self.openai.chat.completions.create(model="gemini-1.5-flash",messages=messages, tools=tools)
+
             if response.choices[0].finish_reason=="tool_calls":
                 message = response.choices[0].message
                 tool_calls = message.tool_calls
@@ -130,5 +150,14 @@ If the user is engaging in discussion, try to steer them towards getting in touc
 
 if __name__ == "__main__":
     me = Me()
-    gr.ChatInterface(me.chat, type="messages").launch()
     
+    # Pre-populated chat history with bot first message
+    initial_history = [
+        {"role": "assistant", "content": "Hi, I'm Priya. Ask me anything about my background, education, or myself 😆"}
+    ]
+    
+    gr.ChatInterface(
+        me.chat,
+        type="messages",
+        state=initial_history
+    ).launch()
