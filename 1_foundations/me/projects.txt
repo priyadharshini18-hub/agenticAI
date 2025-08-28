@@ -1,0 +1,17 @@
+Dashboard Management for Cognitive Rehabilitation:
+During my time working with PSG Hospitals, I developed a web dashboard and mobile app for cognitive rehabilitation using Django and Flutter. The mobile app allowed patients to download and engage with cognitive games, while automatically uploading their game logs for doctors to analyze. Doctors could monitor patient progress through the dashboard, which included data visualizations to track how quickly patients advanced through each level of the game, helping them assess improvements more effectively.
+
+Website for Retail Experience:
+In addition, I built an e-commerce website using Flask and MySQL that provided personalized recommendations based on user search history, preferences, and trending products in the market. This project enhanced the retail experience by showcasing products in a dynamic and user-centric manner, offering tailored suggestions to improve customer engagement.
+
+Multi-label Chest X-ray Classification:
+Developed a deep learning model using ResNet50 and ResNext50 architectures to analyze catheter positioning in chest X-rays. The model automates medical diagnostics, reducing manual intervention by doctors and improving efficiency in clinical decision-making.
+Github Link : https://github.com/priyadharshini18-hub/Catheter-Positioning-using-ResNet
+
+Pricing Comparison System for Food Delivery
+Built a pricing comparison system for online food delivery platforms by scraping real-time data from DoorDash, UberEats, and Grubhub using BeautifulSoup and Selenium. Integrated sentiment analysis on restaurant reviews using NLP techniques to help users identify cost-effective and highly rated food options.
+Github Link : https://github.com/priyadharshini18-hub/Food-Ordering-Platform
+
+Expres - Decentralized Social Media Platform
+Built a decentralized, blockchain-integrated social media platform using React.js, FastAPI, and MongoDB, ensuring real-time communication and 99% uptime through ResilientDB. Designed and implemented 10+ secure REST APIs supporting core functionalities such as message reporting, chat history retrieval, and content moderation. ExpRes leverages ResilientDB for fault-tolerant storage, blockchain-based identity verification, and transparent, privacy-preserving content governance.
+Github Link : https://github.com/priyadharshini18-hub/Expres

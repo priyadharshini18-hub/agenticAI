@@ -1,0 +1,45 @@
+Skills :
+
+Programming Languages
+Python
+Java
+C
+C++
+PL/SQL
+BASH
+Tools and Frameworks
+Django
+Flask
+Node.js
+Next.js
+React
+HTML/CSS
+Jenkins CI/CD
+Redis
+PostgreSQL
+Splunk
+Docker
+Kubernetes
+REST API
+API Gateway
+Amazon - S3
+AWS Lambda
+CloudWatch
+BeautifulSoup
+Machine Learning
+TensorFlow
+PyTorch
+Scikit-learn
+NLP
+OpenCV
+LSTM
+ResNext50
+SVM
+AWS SageMaker
+LangChain
+Hugging Face
+OpenAI API
+Other Skills
+Agile / Scrum
+Software Engineering
+Full-Stack Development
