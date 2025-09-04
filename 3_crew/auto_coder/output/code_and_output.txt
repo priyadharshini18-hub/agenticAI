@@ -1,0 +1,19 @@
+```text
+```python
+def calculate_series(num_terms):
+    total = 0.0
+    for i in range(num_terms):
+        term = 1.0 / (2 * i + 1)
+        if i % 2 == 0:
+            total += term
+        else:
+            total -= term
+    return total * 4
+
+result = calculate_series(1000)
+print(result)
+```
+
+Output:
+```
+3.140592653839794
