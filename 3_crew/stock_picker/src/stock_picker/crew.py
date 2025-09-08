@@ -8,6 +8,19 @@ from crewai.memory import LongTermMemory, ShortTermMemory, EntityMemory
 from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file FIRST
+load_dotenv()
+
+# Debug: Check if API key is loaded
+google_api_key = os.getenv('GOOGLE_API_KEY')
+print(f"GOOGLE_API_KEY loaded: {'✓' if google_api_key else '✗'}")
+if google_api_key:
+    print(f"API Key starts with: {google_api_key[:10]}...")
+
+
 class TrendingCompany(BaseModel):
     """ A company that is in the news and attracting attention """
     name: str = Field(description="Company name")
@@ -90,36 +103,36 @@ class StockPicker():
             process=Process.hierarchical,
             verbose=True,
             manager_agent=manager,
-            memory=True,
+            memory=False,
             # Long-term memory for persistent storage across sessions
             long_term_memory = LongTermMemory(
                 storage=LTMSQLiteStorage(
                     db_path="./memory/long_term_memory_storage.db"
                 )
-            ),
+            )#,
             # Short-term memory for current context using RAG
-            short_term_memory = ShortTermMemory(
-                storage = RAGStorage(
-                        embedder_config={
-                            "provider": "openai",
-                            "config": {
-                                "model": 'text-embedding-3-small'
-                            }
-                        },
-                        type="short_term",
-                        path="./memory/"
-                    )
-                ),            # Entity memory for tracking key information about entities
-            entity_memory = EntityMemory(
-                storage=RAGStorage(
-                    embedder_config={
-                        "provider": "openai",
-                        "config": {
-                            "model": 'text-embedding-3-small'
-                        }
-                    },
-                    type="short_term",
-                    path="./memory/"
-                )
-            ),
+            # short_term_memory = ShortTermMemory(
+            #     storage = RAGStorage(
+            #             embedder_config={
+            #                 "provider": "google",
+            #                 "config": {
+            #                     "model": "text-embedding-gecko"
+            #                 }
+            #             },
+            #             type="short_term",
+            #             path="./memory/"
+            #         )
+            #     ),            # Entity memory for tracking key information about entities
+            # entity_memory = EntityMemory(
+            #     storage=RAGStorage(
+            #         embedder_config={
+            #             "provider": "google",
+            #             "config": {
+            #                 "model": "text-embedding-gecko"
+            #             }
+            #         },
+            #         type="short_term",
+            #         path="./memory/"
+            #     )
+            # ),
         )

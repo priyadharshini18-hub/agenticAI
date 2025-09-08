@@ -26,7 +26,7 @@ analysis_task:
     5. Be formatted in a professional, easy-to-read style with clear headings
   expected_output: >
     A polished, professional report on {company} that presents the research
-    findings with added analysis and insights. The report should be well-structured
+    findings with added analysis and insights with graphs and charts. The report should be well-structured
     with an executive summary, main sections, and conclusion.
   agent: analyst
   context:
