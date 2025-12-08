@@ -10,11 +10,11 @@ def send_email(subject: str, html_body: str, email_to: str) -> Dict[str, str]:
     """Send an email with the given subject and HTML body"""
     resend.api_key = os.environ.get('RESEND_API_KEY')
     params = {
-        "from": "jimmy.chang@threecuptea.com",
+        "from": "service@yourdomain.com",
         "to": [f"{email_to}"],
         "subject": subject,
         "html": html_body,
-        "reply_to": "threecuptea@gmail.com"
+        "reply_to": "service@yourdomain.com"
     }
     
     response = resend.Emails.send(params)
