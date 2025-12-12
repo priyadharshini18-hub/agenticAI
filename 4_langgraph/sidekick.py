@@ -14,6 +14,10 @@ import uuid
 import asyncio
 from datetime import datetime
 
+from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
+import os
+
 load_dotenv(override=True)
 
 
@@ -48,18 +52,41 @@ class Sidekick:
     async def setup(self):
         self.tools, self.browser, self.playwright = await playwright_tools()
         self.tools += await other_tools()
-        worker_llm = ChatOpenAI(model="gpt-4o-mini")
+        # worker_llm = ChatOpenAI(model="gpt-4o-mini")
+        # self.worker_llm_with_tools = worker_llm.bind_tools(self.tools)
+
+        # worker_llm = ChatGroq(model="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"))
+        worker_llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",  # or "gemini-1.5-pro" for better quality
+            google_api_key=os.getenv("GOOGLE_API_KEY"),
+            temperature=0
+        )
         self.worker_llm_with_tools = worker_llm.bind_tools(self.tools)
-        evaluator_llm = ChatOpenAI(model="gpt-4o-mini")
+
+        # evaluator_llm = ChatOpenAI(model="gpt-4o-mini")
+        # self.evaluator_llm_with_output = evaluator_llm.with_structured_output(EvaluatorOutput)
+
+        # evaluator_llm = ChatGroq(model="llama-3.3-70b-versatile", api_key=os.getenv("GROQ_API_KEY"))
+        evaluator_llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            google_api_key=os.getenv("GOOGLE_API_KEY"),
+            temperature=0
+        )
         self.evaluator_llm_with_output = evaluator_llm.with_structured_output(EvaluatorOutput)
+
         await self.build_graph()
 
     def worker(self, state: State) -> Dict[str, Any]:
         system_message = f"""You are a helpful assistant that can use tools to complete tasks.
     You keep working on a task until either you have a question or clarification for the user, or the success criteria is met.
     You have many tools to help you, including tools to browse the internet, navigating and retrieving web pages.
+    You have tools to browse the web. 
+    If you navigate to a page, you must follow up with extract_text or similar functions to get information back and evaluate, otherwise you will not be able to answer the user.
     You have a tool to run python code, but note that you would need to include a print() statement if you wanted to receive output.
     The current date and time is {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+
+    You must call tools ONLY using the provided function-calling schema. Do not output <function=...>. Instead, return a valid tool call in JSON.
+    If the selected tool doesn't work, try calling another tool.
 
     This is the success criteria:
     {state["success_criteria"]}
