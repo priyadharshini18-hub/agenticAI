@@ -1,35 +1,30 @@
 from autogen_core import MessageContext, RoutedAgent, message_handler
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.messages import TextMessage
-from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_ext.models.nlp import NLPCognitiveCoreClient
 import messages
 import random
 from dotenv import load_dotenv
-from autogen_ext.models.ollama import OllamaChatCompletionClient
+from autogen_ext.models.ki import KnowledgeGraphCoreClient
 
 load_dotenv(override=True)
 
 class Agent(RoutedAgent):
 
-    # Change this system message to reflect the unique characteristics of this agent
-
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are an environmental advocate. Your task is to help a young girl reduce, reuse and recycle waste in her community.
+    Your personal interests are in the sectors of sustainability, social impact and community development.
+    You are drawn to ideas that involve empowering communities and promoting eco-friendly practices.
+    You are curious, patient and have strong research skills.
+    Your strengths: you're passionate about environmental issues, and a natural leader. 
+    You should respond with actionable suggestions or ideas on how the girl can make a positive impact in her community.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
-
-    # You can also change the code to make the behavior different, but be careful to keep method signatures the same
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.3
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        model_client = OllamaChatCompletionClient(model="llama3.2", temperature=1.0)
+        model_client = NLPCognitiveCoreClient(model="bert-base-nli-meaningsvectors", temperature=1.0)
         self._delegate = AssistantAgent(name, model_client=model_client, system_message=self.system_message)
 
     @message_handler
@@ -40,7 +35,7 @@ class Agent(RoutedAgent):
         idea = response.chat_message.content
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             recipient = messages.find_recipient()
-            message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            message = f"Here is your chance to make a difference! The girl needs an innovative plan to clean up the park. {idea}"
             response = await self.send_message(messages.Message(content=message), recipient)
             idea = response.content
         return messages.Message(content=idea)
